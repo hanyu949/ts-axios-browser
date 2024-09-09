@@ -4,6 +4,16 @@ export interface AxiosRequestConfig {
   data?: any
   params?: Record<string, any>
   headers?: Record<string, string>
+  responseType?: XMLHttpRequestResponseType
+}
+
+export interface AxiosResponse {
+  data: any
+  status: number
+  statusText: string
+  headers: any
+  config: AxiosRequestConfig
+  request: any
 }
 
 export type Method =
@@ -21,3 +31,5 @@ export type Method =
   | 'PUT'
   | 'patch'
   | 'PATCH'
+
+export interface AxiosPromise extends Promise<AxiosResponse> {}

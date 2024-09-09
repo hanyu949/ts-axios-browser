@@ -11,5 +11,5 @@ export const isObject = (val: any): val is Object => {
 
 // 判断是不是普通对象
 export const isPlainObject = (val: any): val is Object => {
-  return toString.call(val) == '[object Object]'
+  return toString.call(val) === '[object Object]'
 }
