@@ -18,8 +18,8 @@ export function buildData(config: AxiosRequestConfig) {
  * @param responseType
  * @returns
  */
-export function transformResponse(data: any, responseType: XMLHttpRequestResponseType): any {
-  //if (responseType !== 'json') return
+export function transformResponse(data: any, responseType?: XMLHttpRequestResponseType): any {
+  // if (responseType !== 'json') return
   if (typeof data === 'string') {
     try {
       data = JSON.parse(data)

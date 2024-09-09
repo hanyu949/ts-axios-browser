@@ -5,6 +5,7 @@ export interface AxiosRequestConfig {
   params?: Record<string, any>
   headers?: Record<string, string>
   responseType?: XMLHttpRequestResponseType
+  timeout?: number
 }
 
 export interface AxiosResponse {
