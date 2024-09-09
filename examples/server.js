@@ -32,13 +32,29 @@ router.get('/simple/get', (req, res) => {
         msg: `hello, world`
     })
 })
+// Q: 为什么这里可以直接返回req.query 我传进来的是encode之后的参数。如果不encode会怎么样？
 router.get('/base/get', (req, res) => {
   res.json(req.query)
+})
+router.post('/base/post', function(req, res) {
+  res.json(req.body)
+})
+router.post('/base/buffer', function(req, res) {
+  let msg = []
+  req.on('data', (chunk) => {
+    if (chunk) {
+      msg.push(chunk)
+    }
+  })
+  req.on('end', () => {
+    let buf = Buffer.concat(msg)
+    res.json(buf.toJSON())
+  })
 })
 
 app.use(router)
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8081
 module.exports = app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`)
 })

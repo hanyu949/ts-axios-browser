@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from '../types'
-import { isDate, isObject } from './util'
+import { isDate, isPlainObject } from './util'
 
 /**
  * 如果params有请求数据 将数据转换为字符串放入URL中
@@ -30,7 +30,7 @@ export function bulidURL(config: AxiosRequestConfig): void {
       token = param.map(i => `${key}[]=${i}`).join('&')
     else if (typeof param === 'string') token = `${key}=${param}`
     else if (isDate(param)) token = param.toISOString()
-    else if (isObject(param)) token = `${key}=${JSON.stringify(param)}`
+    else if (isPlainObject(param)) token = `${key}=${JSON.stringify(param)}`
     if (token) paramsArray.push(token)
   })
 
