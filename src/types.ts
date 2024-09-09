@@ -1,3 +1,11 @@
+export interface AxiosError extends Error {
+  config: AxiosRequestConfig
+  code?: string
+  request?: any
+  response?: AxiosResponse
+  isAxiosError: boolean
+}
+
 export interface AxiosRequestConfig {
   url: string
   method?: Method

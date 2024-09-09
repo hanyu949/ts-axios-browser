@@ -1,7 +1,7 @@
-import { resolveNaptr } from 'dns'
 import { transformResponse } from './helpers/data'
 import { parseHeaders } from './helpers/headers'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from './types'
+import { createAxiosError } from './helpers/error'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -14,8 +14,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     if (responseType) request.responseType = responseType
     if (timeout) request.timeout = timeout
 
-    request.ontimeout = () => reject(new Error(`Timeout of ${timeout} ms exceeded`))
-    request.onerror = () => reject(new Error('Network Error'))
+    request.ontimeout = () =>
+      reject(createAxiosError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
+    request.onerror = () => reject(createAxiosError('Network Error', config, null, request))
     request.onreadystatechange = function handleLoad() {
       if (request.readyState !== 4) return
       if (request.status === 0) return
@@ -43,7 +44,16 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function handleResponse(response: AxiosResponse): void {
       if (response.status >= 200 && response.status < 300) resolve(response)
-      else reject(new Error(`Request failed with status code ${response.status}`))
+      else
+        reject(
+          createAxiosError(
+            `Request failed with status code ${response.status}`,
+            config,
+            null,
+            request,
+            response
+          )
+        )
     }
   })
 }

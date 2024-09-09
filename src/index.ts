@@ -1,8 +1,7 @@
 import { buildData } from './helpers/data'
 import { bulidURL } from './helpers/url'
-import { AxiosRequestConfig } from './types'
+import { AxiosRequestConfig, AxiosError as AxiosErrorOrigin } from './types'
 import xhr from './xhr'
-
 function axios(config: AxiosRequestConfig) {
   processConfig(config)
   return xhr(config)
@@ -20,4 +19,5 @@ function transformRequestData(config: AxiosRequestConfig): void {
   buildData(config)
 }
 
+export type AxiosError = AxiosErrorOrigin
 export default axios
