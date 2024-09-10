@@ -7,10 +7,8 @@ axios({
     msg: 'hi'
   }
 })
-console.dir(axios)
 
-axios.request({
-  url: '/extend/post',
+axios('/extend/post', {
   method: 'post',
   data: {
     msg: 'hello'

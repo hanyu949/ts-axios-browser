@@ -1,9 +1,17 @@
-import { AxiosFunctionType, AxiosPromise, AxiosRequestConfig, Method } from '../types'
+import { AxiosInstance, AxiosPromise, AxiosRequestConfig, Method } from '../types'
 import dispatchRequest from './dispatchRequest'
 
-export class Axios implements AxiosFunctionType {
-  request(config: AxiosRequestConfig): AxiosPromise {
-    return dispatchRequest(config)
+export class Axios implements AxiosInstance {
+  request(param1: string | AxiosRequestConfig, param2?: AxiosRequestConfig): AxiosPromise {
+    if (typeof param1 === 'string') {
+      const url = param1
+      const config = param2 || ({} as AxiosRequestConfig)
+      config.url = url
+      return dispatchRequest(config)
+    } else {
+      const config = param1
+      return dispatchRequest(config)
+    }
   }
   get(url: string, config?: AxiosRequestConfig): AxiosPromise {
     return this._requestMethodWithoutData('get', url, config)

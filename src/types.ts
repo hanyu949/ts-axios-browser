@@ -1,5 +1,5 @@
-export interface AxiosFunctionType {
-  request(config: AxiosRequestConfig): AxiosPromise
+export interface AxiosInstance {
+  request: AxiosRequestFunctionType
   get(url: string, config?: AxiosRequestConfig): AxiosPromise
   delete(url: string, config?: AxiosRequestConfig): AxiosPromise
   head(url: string, config?: AxiosRequestConfig): AxiosPromise
@@ -9,8 +9,9 @@ export interface AxiosFunctionType {
   patch(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise
 }
 
-export interface AxiosInstence extends AxiosFunctionType {
+export interface AxiosRequestFunctionType {
   (config: AxiosRequestConfig): AxiosPromise
+  (url: string, config?: AxiosRequestConfig): AxiosPromise
 }
 
 export interface AxiosError extends Error {
