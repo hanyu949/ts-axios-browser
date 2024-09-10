@@ -1,23 +1,10 @@
-import { buildData } from './helpers/data'
-import { bulidURL } from './helpers/url'
-import { AxiosRequestConfig, AxiosError as AxiosErrorOrigin } from './types'
-import xhr from './xhr'
-function axios(config: AxiosRequestConfig) {
-  processConfig(config)
-  return xhr(config)
-}
-
-function processConfig(config: AxiosRequestConfig): void {
-  transformUrl(config)
-  transformRequestData(config)
-}
-
-function transformUrl(config: AxiosRequestConfig): void {
-  bulidURL(config)
-}
-function transformRequestData(config: AxiosRequestConfig): void {
-  buildData(config)
-}
-
+import { Axios } from './core/Axios'
+import { extendsTo } from './helpers/util'
+import { AxiosError as AxiosErrorOrigin } from './types'
 export type AxiosError = AxiosErrorOrigin
-export default axios
+
+const newAxios = new Axios()
+const b = newAxios.request.bind(newAxios)
+const axiosINS = extendsTo(b, newAxios)
+
+export default axiosINS

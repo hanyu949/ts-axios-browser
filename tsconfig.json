@@ -18,5 +18,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/core/dispatchRequest.ts"  ]
 }
