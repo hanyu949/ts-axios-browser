@@ -3,8 +3,8 @@ import { extendsTo } from './helpers/util'
 import { AxiosError as AxiosErrorOrigin } from './types'
 export type AxiosError = AxiosErrorOrigin
 
-const newAxios = new Axios()
-const b = newAxios.request.bind(newAxios)
-const axiosINS = extendsTo(b, newAxios)
+const context = new Axios()
+const axiosIns = context.request.bind(context)
+const axios = extendsTo(axiosIns, context)
 
-export default axiosINS
+export default axios
