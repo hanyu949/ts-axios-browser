@@ -17,7 +17,9 @@ function processConfig(config: AxiosRequestConfig): void {
 function transformUrl(config: AxiosRequestConfig): void {
   bulidURL(config)
 }
+
 function transformRequestData(config: AxiosRequestConfig): void {
   buildData(config)
 }
+
 export default dispatchRequest
