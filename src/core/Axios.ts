@@ -1,20 +1,68 @@
-import { AxiosInstance, AxiosPromise, AxiosRequestConfig, Method } from '../types'
+import InterceptorManager from '../helpers/interceptor'
+import {
+  AxiosInstance,
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+  RejectedFn,
+  ResolvedFn
+} from '../types'
 import dispatchRequest from './dispatchRequest'
+interface Interceptors {
+  request: InterceptorManager<AxiosRequestConfig>
+  response: InterceptorManager<AxiosResponse>
+}
+interface PromiseChain {
+  resolved: ResolvedFn | ((config: AxiosRequestConfig) => AxiosPromise)
+  rejected?: RejectedFn
+}
+export class Axios {
+  interceptors: Interceptors
 
-export class Axios implements AxiosInstance {
+  constructor() {
+    this.interceptors = {
+      request: new InterceptorManager<AxiosRequestConfig>(),
+      response: new InterceptorManager<AxiosResponse>()
+    }
+  }
+
   request<T = any>(
     param1: string | AxiosRequestConfig,
     param2?: AxiosRequestConfig
   ): AxiosPromise<T> {
+    let config: string | AxiosRequestConfig
     if (typeof param1 === 'string') {
       const url = param1
-      const config = param2 || ({} as AxiosRequestConfig)
+      config = param2 || ({} as AxiosRequestConfig)
       config.url = url
-      return dispatchRequest(config)
     } else {
-      const config = param1
-      return dispatchRequest(config)
+      config = param1
     }
+
+    const chain: PromiseChain[] = [
+      {
+        resolved: dispatchRequest,
+        rejected: undefined
+      }
+    ]
+
+    this.interceptors.request.forEach(interceptor => {
+      chain.unshift(interceptor)
+    })
+
+    this.interceptors.response.forEach(interceptor => {
+      chain.push(interceptor)
+    })
+
+    let promise: Promise<AxiosRequestConfig | AxiosResponse<T>> = Promise.resolve(config)
+
+    while (chain.length) {
+      const { resolved, rejected } = chain.shift()!
+      promise = promise.then(resolved, rejected)
+    }
+
+    return promise as Promise<AxiosResponse<T>>
   }
   get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T> {
     return this._requestMethodWithoutData('get', url, config)

@@ -32,6 +32,7 @@ router.get('/simple/get', (req, res) => {
       msg: `hello, world`
   }, req.query))
 })
+
 // Q: 为什么这里可以直接返回req.query 我传进来的是encode之后的参数。如果不encode会怎么样？
 router.get('/base/get', (req, res) => {
   res.json(req.query)
@@ -70,6 +71,12 @@ router.get('/error/timeout', function(req, res) {
       msg: `hello world`
     })
   }, 3000)
+})
+router.get('/extend/get', (req, res) => {
+  res.json(req.query)
+})
+router.get('/interceptor/get', (req, res) => {
+  res.json(req.query)
 })
 
 

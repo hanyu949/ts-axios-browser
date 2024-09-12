@@ -16,10 +16,10 @@ import { isDate, isPlainObject } from './util'
  * @returns void
  */
 export function bulidURL(config: AxiosRequestConfig): void {
-  let { params, url } = config
-  if (params === null || params === undefined) {
+  if (!config?.params || !config?.url) {
     return
   }
+  let { params, url } = config
   let paramsArray: string[] = []
 
   Object.keys(params).forEach(key => {
@@ -33,7 +33,6 @@ export function bulidURL(config: AxiosRequestConfig): void {
     else if (isDate(param)) token = param.toISOString()
     else if (isPlainObject(param)) token = `${key}=${JSON.stringify(param)}`
     if (token) paramsArray.push(token)
-    console.log(paramsArray)
   })
 
   paramsArray = enCodeURL(paramsArray)
