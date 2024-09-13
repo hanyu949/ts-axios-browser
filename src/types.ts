@@ -40,7 +40,7 @@ export interface AxiosRequestConfig {
   method?: Method
   data?: any
   params?: Record<string, any>
-  headers?: Record<string, string>
+  headers?: Record<string, any>
   responseType?: XMLHttpRequestResponseType
   timeout?: number
 }

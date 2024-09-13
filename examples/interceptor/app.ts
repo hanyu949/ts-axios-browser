@@ -1,14 +1,17 @@
-import axios from "../../src"
+import axios, { AxiosRequestConfig } from "../../src"
 
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use((config: AxiosRequestConfig) => {
+  config.headers = config.headers || {};
   config.headers.test += '1'
   return config
 })
 axios.interceptors.request.use(config => {
+  config.headers = config.headers || {};
   config.headers.test += '2'
   return config
 })
 axios.interceptors.request.use(config => {
+  config.headers = config.headers || {};
   config.headers.test += '3'
   return config
 })

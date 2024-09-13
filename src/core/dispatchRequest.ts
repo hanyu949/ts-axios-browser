@@ -1,6 +1,5 @@
 import { buildData } from '../helpers/data'
 import { bulidURL } from '../helpers/url'
-import { extendsTo } from '../helpers/util'
 import { AxiosPromise, AxiosRequestConfig } from '../types'
 import xhr from './xhr'
 
