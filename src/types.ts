@@ -43,6 +43,7 @@ export interface AxiosRequestConfig {
   headers?: Record<string, any>
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  [propName: string]: any
 }
 
 export interface AxiosResponse<T = any> {

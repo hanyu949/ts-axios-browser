@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from '../types'
+
 const toString = Object.prototype.toString
 
 export const isDate = (val: any): val is Date => {
@@ -20,4 +22,52 @@ export const extendsTo = <T, U>(to: T, from: U): T & U => {
     ;(to as T & U)[key] = from[key] as any
   }
   return to as T & U
+}
+
+// 根据不同的method拍平headers
+export function flattenHeaders(
+  headers: AxiosRequestConfig['headers'],
+  method: AxiosRequestConfig['method']
+): AxiosRequestConfig['headers'] {
+  if (!headers || !method) {
+    return headers
+  }
+  // Q: patch head options是什么http方法？
+  const methodsWithData: AxiosRequestConfig['method'][] = ['post', 'put', 'patch']
+  const methodsNoData: AxiosRequestConfig['method'][] = ['delete', 'get', 'head', 'options']
+  // axios.defaults.headers.common['test'] = 123
+  // axios.defaults.headers.post['Content-Type'] = 'json'
+  if (methodsNoData.indexOf(method) > -1) {
+  }
+  if (methodsWithData.indexOf(method) > -1) {
+  }
+  headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
+  const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
+  methodsToDelete.forEach(method => {
+    delete headers![method]
+  })
+  console.log(headers, 'headers')
+  return headers
+}
+
+// 合并传进来的对象
+function deepMerge(...objs: any[]) {
+  const result = Object.create(null)
+  objs.forEach(obj => {
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        const val = obj[key]
+        if (isPlainObject(val)) {
+          if (isPlainObject(result[key])) {
+            result[key] = deepMerge(result[key], val)
+          } else {
+            result[key] = deepMerge({}, val)
+          }
+        } else {
+          result[key] = val
+        }
+      })
+    }
+  })
+  return result
 }
