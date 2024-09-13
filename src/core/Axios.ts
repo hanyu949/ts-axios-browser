@@ -1,5 +1,6 @@
 import InterceptorManager from '../helpers/interceptor'
 import {
+  AxiosInstance,
   AxiosPromise,
   AxiosRequestConfig,
   AxiosResponse,
@@ -19,10 +20,8 @@ interface PromiseChain {
 }
 export class Axios {
   interceptors: Interceptors
-  defaults: AxiosRequestConfig
 
-  constructor(initConfig: AxiosRequestConfig) {
-    this.defaults = initConfig
+  constructor() {
     this.interceptors = {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>()
