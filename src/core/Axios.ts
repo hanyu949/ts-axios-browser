@@ -9,7 +9,7 @@ import {
   ResolvedFn
 } from '../types'
 import dispatchRequest from './dispatchRequest'
-import { mergeConfig } from './mergeConfig'
+//import { mergeConfig } from './mergeConfig'
 interface Interceptors {
   request: InterceptorManager<AxiosRequestConfig>
   response: InterceptorManager<AxiosResponse>
@@ -41,7 +41,7 @@ export class Axios {
       config = param1
     }
 
-    config = mergeConfig(this.defaults, config)
+    //config = mergeConfig(this.defaults, config)
 
     const chain: PromiseChain[] = [
       {
