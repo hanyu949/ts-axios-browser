@@ -1,3 +1,4 @@
+import { AxiosError } from '../helpers/error'
 import InterceptorManager from '../helpers/interceptor'
 import {
   AxiosInstance,
@@ -9,7 +10,8 @@ import {
   ResolvedFn
 } from '../types'
 import dispatchRequest from './dispatchRequest'
-//import { mergeConfig } from './mergeConfig'
+import { mergeConfig } from './mergeConfig'
+// import { mergeConfig } from './mergeConfig'
 interface Interceptors {
   request: InterceptorManager<AxiosRequestConfig>
   response: InterceptorManager<AxiosResponse>
@@ -27,6 +29,7 @@ export class Axios {
       response: new InterceptorManager<AxiosResponse>()
     }
   }
+  timer = 1
 
   request<T = any>(
     param1: string | AxiosRequestConfig,
@@ -40,10 +43,9 @@ export class Axios {
     } else {
       config = param1
     }
+    if (typeof config === 'string') throw new AxiosError('methods unkonw', { url: config })
 
-    //config = mergeConfig(this.defaults, config)
-
-    const chain: PromiseChain[] = [
+    let chain: PromiseChain[] = [
       {
         resolved: dispatchRequest,
         rejected: undefined

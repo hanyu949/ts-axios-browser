@@ -37,16 +37,15 @@ export function flattenHeaders(
   const methodsNoData: AxiosRequestConfig['method'][] = ['delete', 'get', 'head', 'options']
   // axios.defaults.headers.common['test'] = 123
   // axios.defaults.headers.post['Content-Type'] = 'json'
-  if (methodsNoData.indexOf(method) > -1) {
-  }
-  if (methodsWithData.indexOf(method) > -1) {
-  }
+  // if (methodsNoData.indexOf(method) > -1) {
+  // }
+  // if (methodsWithData.indexOf(method) > -1) {
+  // }
   headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
   const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
   methodsToDelete.forEach(method => {
     delete headers![method]
   })
-  console.log(headers, 'headers')
   return headers
 }
 

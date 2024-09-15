@@ -44,7 +44,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function handleResponse(response: AxiosResponse): void {
       if (response.status >= 200 && response.status < 300) resolve(response)
-      else
+      else {
         reject(
           createAxiosError(
             `Request failed with status code ${response.status}`,
@@ -54,6 +54,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             response
           )
         )
+      }
     }
   })
 }
