@@ -1,7 +1,8 @@
 import axios from "../../src"
 
 /**
- * 请求响应拦截器
+ * 请求响应拦截器 
+ * Axios拦截器的配置在全局生效 所以不需要在每个请求前都放上拦截器，这样的结果会和预期不一样
  * 测试interceptor:
  * axios.interceptors.request.use()
  * 功能：
@@ -16,7 +17,6 @@ import axios from "../../src"
  * 1. 多次添加拦截器，是否可以依次执行，累计对参数的操作
  * 功能三测试:
  * 1. 添加多个拦截器，eject其中一个，看返回结果是否和预期的一样
- * 
  */
 function request() {
   return axios({
@@ -41,7 +41,7 @@ function request() {
 function interceptorTest1() {
   // 看network tab中的requestHeaders
   axios.interceptors.request.use(config => {
-    config.headers.test = "config/data"
+    config.headers!.test = "config/data"
     return config
   })
   // 看console.log()
@@ -64,15 +64,15 @@ function interceptorTest1() {
  */
 async function interceptorTest2() {
   axios.interceptors.request.use(config => {
-    config.headers.test += " interceptorTest2 1time "
+    config.headers!.test += " interceptorTest2 1time "
     return config
   })
   axios.interceptors.request.use(config => {
-    config.headers.test += " interceptorTest2 2time "
+    config.headers!.test += " interceptorTest2 2time "
     return config
   })
   axios.interceptors.request.use(config => {
-    config.headers.test += " interceptorTest2 3time "
+    config.headers!.test += " interceptorTest2 3time "
     return config
   })
   
@@ -109,15 +109,15 @@ async function interceptorTest2() {
  */
 async function interceptorTest3() {
   axios.interceptors.request.use(config => {
-    config.headers.test += " interceptorTest3.request 1time "
+    config.headers!.test += " interceptorTest3.request 1time "
     return config
   })
   const request2timer = axios.interceptors.request.use(config => {
-    config.headers.test += " interceptorTest3.request 2time "
+    config.headers!.test += " interceptorTest3.request 2time "
     return config
   })
   axios.interceptors.request.use(config => {
-    config.headers.test += " interceptorTest3.request 3time "
+    config.headers!.test += " interceptorTest3.request 3time "
     return config
   })
   
@@ -143,6 +143,8 @@ async function interceptorTest3() {
   return res
 }
 
+
+// 打开下面任意一个注释测试
 // interceptorTest1()
 // interceptorTest2()
-interceptorTest3()
+// interceptorTest3()
