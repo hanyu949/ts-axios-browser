@@ -1,21 +1,27 @@
 import { head } from 'shelljs'
 import { AxiosRequestConfig } from '../types'
+import { isPlainObject } from './util'
 
-export function buildHeaders(config: AxiosRequestConfig): void {
-  const defaultContentType = 'Content-Type'
-  const defaultJsonCOntentType = 'application/json;charset=utf-8'
-  if (!config.headers) {
-    config.headers = {}
-    config.headers[defaultContentType] = defaultJsonCOntentType
-  } else {
-    normalizeHeaderName(config.headers, defaultContentType)
+export function buildHeaders(config: AxiosRequestConfig): any {
+  const { headers = {}, data } = config
+  normalizeHeaderName(headers, 'Content-Type')
+
+  if (isPlainObject(data)) {
+    if (headers && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json;charset=utf-8'
+    }
   }
+
+  return headers
 }
 
-function normalizeHeaderName(headers: Record<string, string>, normalizeHeaderName: string) {
+function normalizeHeaderName(headers: Record<string, string>, normalizedName: string) {
+  if (!headers) {
+    return
+  }
   Object.keys(headers).forEach(name => {
-    if (name !== normalizeHeaderName && name.toUpperCase() === normalizeHeaderName.toUpperCase()) {
-      headers[normalizeHeaderName] = headers[name]
+    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+      headers[normalizedName] = headers[name]
       delete headers[name]
     }
   })
