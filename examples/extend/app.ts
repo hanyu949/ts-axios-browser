@@ -68,34 +68,42 @@ function ExtendTest2() {
 }
 // ExtendTest2()
 
+
+/**
+ * 功能3 测试
+ * Axios接受一个泛型，这个泛型是返回值的类型
+ * * function getXXX<T>
+ *   return axios.get<ResponseData<T>>('/somepath')
+ * 通过
+ */
 function ExtendTest3() {
   interface ResponseData<T = any> {
-  code: number
-  result: T
-  message: string
+    code: number
+    result: T
+    message: string
   }
 
   interface User {
-  name: string
-  age: number
+    name: string
+    age: number
   }
 
   function getUser<T>() {
-  return axios<ResponseData<T>>('/extend/user')
-    .then(res => res.data)
-    .catch(err => console.error(err))
+    return axios<ResponseData<T>>('/extend/user')
+      .then(res => res.data)
+      .catch(err => console.error(err))
   }
 
   async function test() {
-  const user = await getUser<User>()
-  if (user) {
-    console.log(user.result.name)
-  }
+    const user = await getUser<User>()
+    if (user) {
+      console.log(user.result.name)
+    }
   }
 
   test()
 }
-
+//ExtendTest3()
 
 
 
