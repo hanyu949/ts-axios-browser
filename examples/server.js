@@ -33,7 +33,6 @@ router.get('/simple/get', (req, res) => {
   }, req.query))
 })
 
-// Q: 为什么这里可以直接返回req.query 我传进来的是encode之后的参数。如果不encode会怎么样？
 router.get('/base/get', (req, res) => {
   res.json(req.query)
 })

@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from '../types'
 const toString = Object.prototype.toString
 
 export const isDate = (val: any): val is Date => {
-  return toString.call(val) === '[Object Date]'
+  return toString.call(val) === '[object Date]'
 }
 
 // 对于 FormData、ArrayBuffer 这些类型，isObject 判断也为 true

@@ -32,115 +32,209 @@ import axios from '../../src/index';
  * 6. 处理响应data
  *    在不去设置 responseType 的情况下，当服务端返回给我们的数据是字符串类型，我们可以尝试去把它转换成一个 JSON 对象。
  */
-axios({
-  method: 'get',
-  url: '/base/get',
-  params: {
-    foo: ['bar', 'baz']
-  }
-})
 
-axios({
-  method: 'get',
-  url: '/base/get',
-  params: {
-    foo: {
-      bar: 'baz'
-    }
-  }
-})
+/**
+ * 功能1测试  如果Method是get的情况：
+ *      a. 参数值为数组
+ *      b. 参数为对象
+ *      c. 参数Date类型
+ *      d. 特殊字符的支持
+ *      e. 空值忽略 {a: null} a忽略
+ *      f. 丢弃url中哈希的标记
+ *      g. 保留url中已经存在的参数
+ */
+function test1() {
+    axios({
+        method: 'get',
+        url: '/base/get',
+        params: {
+            foo: ['bar', 'baz']
+        }
+    }).then(res => {
+        console.log("功能1测试 a. 参数值为数组 预期返回：['bar', 'baz'],  实际返回：", res.data)
+    })
 
-const date = new Date()
+    axios({
+        method: 'get',
+        url: '/base/get',
+        params: {
+            foo: {
+                bar: 'baz'
+            }
+        }
+    }).then(res => {
+        console.log("功能1测试 b. 参数为对象 预期返回：{ bar: 'baz' },  实际返回：", res.data)
+    })
 
-axios({
-  method: 'get',
-  url: '/base/get',
-  params: {
-    date
-  }
-})
+    const date = new Date()
+    axios({
+        method: 'get',
+        url: '/base/get',
+        params: {
+            date
+        }
+    }).then(res => {
+        console.log(res.config)
+        console.log("功能1测试 c. 参数Date类型 预期返回: new Date(),  实际返回：", res.data)
+    })
 
-axios({
-  method: 'get',
-  url: '/base/get',
-  params: {
-    foo: '@:$, '
-  }
-})
+    axios({
+        method: 'get',
+        url: '/base/get',
+        params: {
+            foo: '@:$, '
+        }
+    }).then(res => {
+        console.log("功能1测试 d. 特殊字符的支持 预期返回: {foo: '@:$, '},  实际返回：", res.data)
+    })
 
-axios({
-  method: 'get',
-  url: '/base/get',
-  params: {
-    foo: 'bar',
-    baz: null,
-    bar: 2
-  }
-})
+    axios({
+    method: 'get',
+    url: '/base/get',
+        params: {
+            foo: 'bar',
+            baz: null,
+            bar: 2
+        }
+    }).then(res => {
+        console.log("功能1测试 e. 空值忽略 预期返回: {foo: 'bar', bar: 2},  实际返回：", res.data)
+    })
 
-axios({
-  method: 'get',
-  url: '/base/get#hash',
-  params: {
-    foo: 'bar'
-  }
-})
+    axios({
+        method: 'get',
+        url: '/base/get#hash',
+        params: {
+            foo: 'bar'
+        }
+    }).then(res => {
+        console.log("功能1测试 f. 丢弃url中哈希的标记 预期请求URL: '/base/get?foo=bar',  实际返回：", res.config.url)
+    })
 
-axios({
-  method: 'get',
-  url: '/base/get?foo=bar',
-  params: {
-    bar: 'baz'
-  }
-})
+    axios({
+        method: 'get',
+        url: '/base/get?foo=bar',
+        params: {
+            bar: 'baz'
+        }
+    }).then(res => {
+        console.log("功能1测试 g. 保留url中已经存在的参数 预期请求URL: '/base/get?foo=bar&bar=baz',  实际返回：", res.config.url)
+    })
+}
+test1()
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  responseType: 'json',
-  data: {
-    a: 1,
-    b: 2
-  }
-})
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  headers: {
-    'content-type': 'application/json;'
-  },
-  data: {
-    a: 1,
-    b: 2
-  }
-})
 
-const paramsString = 'q=URLUtils.searchParams&topic=api'
-const searchParams = new URLSearchParams(paramsString)
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  data: searchParams
-})
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  data: {a:123}
-}).then((res) => {
-  console.log(res, 1)
-})
+// axios({
+//   method: 'get',
+//   url: '/base/get',
+//   params: {
+//     foo: ['bar', 'baz']
+//   }
+// })
 
-axios({
-  method: 'post',
-  url: '/base/post',
-  responseType: 'json',
-  data: {
-    a: 3,
-    b: 4
-  }
-}).then((res) => {
-  console.log(res, 2 )
-})
+// axios({
+//   method: 'get',
+//   url: '/base/get',
+//   params: {
+//     foo: {
+//       bar: 'baz'
+//     }
+//   }
+// })
+
+// const date = new Date()
+
+// axios({
+//   method: 'get',
+//   url: '/base/get',
+//   params: {
+//     date
+//   }
+// })
+
+// axios({
+//   method: 'get',
+//   url: '/base/get',
+//   params: {
+//     foo: '@:$, '
+//   }
+// })
+
+// axios({
+//   method: 'get',
+//   url: '/base/get',
+//   params: {
+//     foo: 'bar',
+//     baz: null,
+//     bar: 2
+//   }
+// })
+
+// axios({
+//   method: 'get',
+//   url: '/base/get#hash',
+//   params: {
+//     foo: 'bar'
+//   }
+// })
+
+// axios({
+//   method: 'get',
+//   url: '/base/get?foo=bar',
+//   params: {
+//     bar: 'baz'
+//   }
+// })
+
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   responseType: 'json',
+//   data: {
+//     a: 1,
+//     b: 2
+//   }
+// })
+
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   headers: {
+//     'content-type': 'application/json;'
+//   },
+//   data: {
+//     a: 1,
+//     b: 2
+//   }
+// })
+
+// const paramsString = 'q=URLUtils.searchParams&topic=api'
+// const searchParams = new URLSearchParams(paramsString)
+
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   data: searchParams
+// })
+
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   data: {a:123}
+// }).then((res) => {
+//   console.log(res, 1)
+// })
+
+// axios({
+//   method: 'post',
+//   url: '/base/post',
+//   responseType: 'json',
+//   data: {
+//     a: 3,
+//     b: 4
+//   }
+// }).then((res) => {
+//   console.log(res, 2 )
+// })
