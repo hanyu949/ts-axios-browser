@@ -27,19 +27,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const router = express.Router()
-router.get('/simple/get', (req, res) => {
-    res.json(Object.assign({
-      msg: `hello, world`
-  }, req.query))
-})
 
+// base
 router.get('/base/get', (req, res) => {
   res.json(req.query)
 })
 router.post('/base/post', function(req, res) {
-  res.json(req.body)
-})
-router.post('/extend/post', function(req, res) {
   res.json(req.body)
 })
 router.post('/base/buffer', function(req, res) {
@@ -54,15 +47,19 @@ router.post('/base/buffer', function(req, res) {
     res.json(buf.toJSON())
   })
 })
+
+// extend
+router.post('/extend/post', function(req, res) {
+  res.json(req.body)
+})
+router.get('/extend/get', (req, res) => {
+  res.json(req.query)
+})
+
+// error
 router.get('/error/get', function(req, res) {
-  if (Math.random() > 0.9) {
-    res.json({
-      msg: `hello world`
-    })
-  } else {
-    res.status(500)
-    res.end()
-  }
+  res.status(500)
+  res.end()
 })
 router.get('/error/timeout', function(req, res) {
   setTimeout(() => {
@@ -71,9 +68,8 @@ router.get('/error/timeout', function(req, res) {
     })
   }, 3000)
 })
-router.get('/extend/get', (req, res) => {
-  res.json(req.query)
-})
+
+// interceptor
 router.get('/interceptor/get', (req, res) => {
   res.json(req.query)
 })
