@@ -145,6 +145,6 @@ async function interceptorTest3() {
 
 
 // 打开下面任意一个注释测试
-// interceptorTest1()
+interceptorTest1()
 // interceptorTest2()
 // interceptorTest3()

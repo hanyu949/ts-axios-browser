@@ -204,4 +204,7 @@ function test3() {
         console.log("功能6测试 在不去设置 responseType 的情况下，当服务端返回给我们的数据是字符串类型，我们可以尝试去把它转换成一个 JSON 对象 预期返回: [object Object],  实际返回：", Object.prototype.toString.call(res.data))
     })
 }
+
+test1()
+test2()
 test3()

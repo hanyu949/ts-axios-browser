@@ -45,6 +45,32 @@ export interface AxiosRequestConfig {
   timeout?: number
   [propName: string]: any
 }
+export interface AxiosDefaultConfig {
+  url?: string
+  method?: Method
+  headers?: DefaultHeaders
+  responseType?: XMLHttpRequestResponseType
+  timeout?: number
+  [propName: string]: any
+}
+interface DefaultHeaders {
+  common?: Record<string, string>
+  get?: Record<string, string>
+  GET?: Record<string, string>
+  delete?: Record<string, string>
+  Delete?: Record<string, string>
+  head?: Record<string, string>
+  HEAD?: Record<string, string>
+  options?: Record<string, string>
+  OPTIONS?: Record<string, string>
+  post?: Record<string, string>
+  POST?: Record<string, string>
+  put?: Record<string, string>
+  PUT?: Record<string, string>
+  patch?: Record<string, string>
+  PATCH?: Record<string, string>
+  [propName: string]: any
+}
 
 export interface AxiosResponse<T = any> {
   data: T

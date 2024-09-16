@@ -1,4 +1,4 @@
-import axios from "../../src"
+import axios, { AxiosRequestConfig } from "../../src"
 
 /**
  * 为所有的请求方法拓展接口
@@ -34,7 +34,7 @@ import axios from "../../src"
  * 通过
  */
 function ExtendTest1() {
-  const config = (method?, params?, data?) => {
+  const config = (method?, params?, data?): AxiosRequestConfig => {
     return {
       method,
       params,
@@ -46,11 +46,11 @@ function ExtendTest1() {
   axios.delete('/extend/delete', config('delete', {params: '测试extend delete方法'}))
   axios.head('/extend/head', config('head', {params: '测试extend head方法'}))
   axios.options('/extend/options', config('options', {params: '测试extend options方法'}))
-  axios.post('/extend/post', config('post', null, {data: '测试extend post方法'}))
+  axios.post('/extend/post',  {method: 'post',data: {msg: 'hello'}})
   axios.put('/extend/put', config('put', null, {data: '测试extend put方法'}))
   axios.patch('/extend/patch', config('patch', null, {data: '测试extend patch方法'}))
 }
-// ExtendTest1()
+
 
 /**
  * 功能2 测试
@@ -66,7 +66,7 @@ function ExtendTest2() {
   axios('/extend/get', {method: 'get', params: {msg: 'hello'}})
   axios({url: '/extend/get', method: 'get', params: {msg: 'hello'}})
 }
-// ExtendTest2()
+
 
 
 /**
@@ -89,7 +89,7 @@ function ExtendTest3() {
   }
 
   function getUser<T>() {
-    return axios<ResponseData<T>>('/extend/user')
+    return axios<ResponseData<T>>('/extend/user', {method: 'get'})
       .then(res => res.data)
       .catch(err => console.error(err))
   }
@@ -103,6 +103,8 @@ function ExtendTest3() {
 
   test()
 }
+ExtendTest1()
+// ExtendTest2()
 // ExtendTest3()
 
 

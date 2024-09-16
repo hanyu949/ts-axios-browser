@@ -52,7 +52,30 @@ router.post('/base/buffer', function(req, res) {
 router.post('/extend/post', function(req, res) {
   res.json(req.body)
 })
+router.put('/extend/put', function(req, res) {
+  res.json(req.body)
+})
+router.patch('/extend/patch', function(req, res) {
+  res.json(req.body)
+})
 router.get('/extend/get', (req, res) => {
+  res.json(req.query)
+})
+router.get('/extend/user', (req, res) => {
+  res.json({
+    result: {
+      name: "Yee",
+      age: 28
+    }
+  })
+})
+router.delete('/extend/delete', (req, res) => {
+  res.json(req.query)
+})
+router.head('/extend/head', (req, res) => {
+  res.json(req.query)
+})
+router.options('/extend/options', function(req, res) {
   res.json(req.query)
 })
 
