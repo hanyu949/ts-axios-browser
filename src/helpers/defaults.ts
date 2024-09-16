@@ -5,7 +5,8 @@ const defaults: AxiosDefaultConfig = {
   timeout: 0,
   headers: {
     common: {
-      Accept: 'application/json, text/plain, */*'
+      Accept: 'application/json, text/plain, */*',
+      test: 'default.test value'
     }
   }
 }

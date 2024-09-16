@@ -1,3 +1,4 @@
+import QueryString from "qs"
 import axios, { AxiosRequestConfig } from "../../src"
 
 /**
@@ -34,37 +35,67 @@ import axios, { AxiosRequestConfig } from "../../src"
  * 通过
  */
 function ExtendTest1() {
-  const config = (method?, params?, data?): AxiosRequestConfig => {
+  const config = (method?, params?): AxiosRequestConfig => {
     return {
       method,
       params,
-      data
     }
   }
-  axios.request({url: '/extend/get', ...config('get', {params: '测试extend get方法'})})
-  axios.get('/extend/get', config('get', {params: '测试extend get方法'}))
-  axios.delete('/extend/delete', config('delete', {params: '测试extend delete方法'}))
-  axios.head('/extend/head', config('head', {params: '测试extend head方法'}))
-  axios.options('/extend/options', config('options', {params: '测试extend options方法'}))
-  axios.post('/extend/post',  {method: 'post',data: {msg: 'hello'}})
-  axios.put('/extend/put', config('put', null, {data: '测试extend put方法'}))
-  axios.patch('/extend/patch', config('patch', null, {data: '测试extend patch方法'}))
+  Promise.all([
+    axios.request({url: '/extend/get', ...config('get', {params: '测试extend get方法'})}),
+    axios.get('/extend/get', config('get', {params: '测试extend get方法'})),
+    axios.delete('/extend/delete', config('delete', {params: '测试extend delete方法'})),
+    axios.head('/extend/head', config('head', {params: '测试extend head方法'})),
+    axios.options('/extend/options', config('options', {params: '测试extend options方法'})),
+    axios.post('/extend/post',  QueryString.stringify({data: '测试extend post方法'})),
+    axios.put('/extend/put', QueryString.stringify({data: '测试extend put方法'})),
+    axios.patch('/extend/patch', QueryString.stringify({data: '测试extend patch方法'}))
+  ]).then(ress => {
+    ress.forEach(res => {
+      console.log(res.data)
+    })
+    console.log('成功返回')
+  }).catch(e => {
+    console.error('Error', e)
+  })
+  
 }
 
 
 /**
  * 功能2 测试
- * 下面两个返回结果应该是一样的
+ * 下面 post get 各三个返回结果应该是一样的
  * 
  * 通过
  */
 function ExtendTest2() {
   // post:
-  axios('/extend/post', {method: 'post',data: {msg: 'hello'}})
-  axios({url: '/extend/post',method: 'post',data: {msg: 'hello'}})
+  Promise.all(
+    [
+      axios('/extend/post', {method: 'post', data: QueryString.stringify({msg: 'hello post'})}),
+      axios({url: '/extend/post', method: 'post', data: QueryString.stringify({msg: 'hello post'})}),
+      axios.post('/extend/post', QueryString.stringify({msg: 'hello post'}))
+    ]
+  ).then(res => {
+    res.forEach(r => {
+      console.log(r.data)
+    })
+  })
+
+
   // get:
-  axios('/extend/get', {method: 'get', params: {msg: 'hello'}})
-  axios({url: '/extend/get', method: 'get', params: {msg: 'hello'}})
+  Promise.all(
+    [
+      axios('/extend/get', {method: 'get', params: {msg: 'hello get'}}),
+      axios({url: '/extend/get', method: 'get', params: {msg: 'hello get'}}),
+      axios.get('/extend/get', {params: {msg: 'hello get'}})
+    ]
+  ).then(res => {
+    res.forEach(r => {
+      console.log(r.data)
+    })
+  })
+
 }
 
 
@@ -103,7 +134,7 @@ function ExtendTest3() {
 
   test()
 }
-ExtendTest1()
+// ExtendTest1()
 // ExtendTest2()
 // ExtendTest3()
 

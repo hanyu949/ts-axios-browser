@@ -22,10 +22,10 @@ interface PromiseChain {
 }
 export class Axios {
   interceptors: Interceptors
-  defaults?: AxiosDefaultConfig
+  defaults: AxiosDefaultConfig
 
-  constructor(defaults?: AxiosDefaultConfig) {
-    if (defaults) this.defaults = defaults
+  constructor(defaults: AxiosDefaultConfig) {
+    this.defaults = defaults
     this.interceptors = {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>()
@@ -36,17 +36,18 @@ export class Axios {
     defaults: AxiosDefaultConfig,
     configs: AxiosRequestConfig
   ): AxiosRequestConfig {
-    let margedConfig: AxiosRequestConfig = { headers: {} }
+    let margedConfig: AxiosRequestConfig = Object.create({ headers: {} })
     let { headers: defualtsHeaders = {} } = defaults
     let { headers: configHeaders = {}, method = 'get' } = configs
 
-    // 将config中的属性覆盖到margedConfig (key === 'headers')
+    // 1. 将config中的属性覆盖到margedConfig (key !== 'headers')
+    // 因为对于 url、params、data 这些属性，默认配置显然是没有意义的，它们是和每个请求强相关的，所以我们只从自定义配置中获取。
     Object.keys(configs).forEach(key => {
       if (key === 'headers') return
       margedConfig[key] = defaults[key]
       margedConfig[key] = configs[key]
     })
-    // 把defualtsHeaders部分，按照common和method的区分 填入margedConfig
+    // 2. 把defualtsHeaders部分，按照common和method的区分 填入margedConfig
     Object.keys(defualtsHeaders).forEach(key => {
       if (key === 'common') {
         const commonObj = defualtsHeaders[key] ?? {}
@@ -57,7 +58,7 @@ export class Axios {
         margedConfig.headers = Object.assign({}, margedConfig.headers, defualtsHeaders[key])
       }
     })
-    // 把requestConfig中 自定义的headers，和margedConfig.headers合并
+    // 3. 把requestConfig中 自定义的headers，和margedConfig.headers合并
     margedConfig.headers = Object.assign({}, margedConfig.headers, configHeaders)
 
     return margedConfig
@@ -75,8 +76,10 @@ export class Axios {
     } else {
       config = param1
     }
+
     if (typeof config === 'string') throw new AxiosError('methods unkonw', { url: config })
-    this.margeConfigs(this.defaults ?? {}, config)
+    config = this.margeConfigs(this.defaults, config) // defualt > config
+
     let chain: PromiseChain[] = [
       {
         resolved: dispatchRequest,
@@ -128,7 +131,7 @@ export class Axios {
     data: any,
     config?: AxiosRequestConfig
   ): AxiosPromise {
-    return this.request(Object.assign(config || {}, { method, url, data }))
+    return this.request(Object.assign(config || {}, { method }, { url }, { data }))
   }
   _requestMethodWithoutData(
     method: Method,

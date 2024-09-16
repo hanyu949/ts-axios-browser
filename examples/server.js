@@ -97,6 +97,13 @@ router.get('/interceptor/get', (req, res) => {
   res.json(req.query)
 })
 
+// config
+router.post('/config/post', (req, res) => {
+  res.json(req.body)
+})
+router.get('/config/get', (req, res) => {
+  res.json(req.query)
+})
 
 app.use(router)
 
