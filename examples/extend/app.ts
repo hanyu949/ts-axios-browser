@@ -134,9 +134,9 @@ function ExtendTest3() {
 
   test()
 }
-// ExtendTest1()
-// ExtendTest2()
-// ExtendTest3()
+ExtendTest1()
+ExtendTest2()
+ExtendTest3()
 
 
 

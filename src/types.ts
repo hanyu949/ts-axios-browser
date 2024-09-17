@@ -43,7 +43,12 @@ export interface AxiosRequestConfig {
   headers?: Record<string, string>
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  transformRequest?: TransformFn | TransformFn[]
+  transformResponse?: TransformFn | TransformFn[]
   [propName: string]: any
+}
+export interface TransformFn {
+  (data: any, headers?: any): any
 }
 export interface AxiosDefaultConfig {
   url?: string

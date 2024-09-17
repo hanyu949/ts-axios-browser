@@ -38,7 +38,7 @@ function request() {
  * 
  * 9.14 通过
  */
-function interceptorTest1() {
+async function interceptorTest1() {
   // 看network tab中的requestHeaders
   axios.interceptors.request.use(config => {
     config.headers!.test = "config/data"
@@ -49,11 +49,11 @@ function interceptorTest1() {
     res.data["interceptorTest1"] = "接受的参数, 反应到了config/data对象中."
     return res
   })
-  request()
+  const res = await request()
   // res.config.headers 预期："config/data"
-  // console.log('拦截器功能一测试1是否能反应到config/data对象中 config =======> 预期："config/data"', res.config.headers)
+  console.log('拦截器功能一测试1是否能反应到config/data对象中 config =======> 预期："config/data"', res.config.headers)
   // res.data 预期："接受的参数, 反应到了config/data对象中."
-  // console.log('拦截器功能一测试1是否能反应到config/data对象中 response =======> 预期："接受的参数, 反应到了config/data对象中."', res.data)
+  console.log('拦截器功能一测试1是否能反应到config/data对象中 response =======> 预期："接受的参数, 反应到了config/data对象中."', res.data)
 }
 
 /**
@@ -93,9 +93,9 @@ async function interceptorTest2() {
 
   const res = await request()
   // res.config.headers 预期： 3time  2time  1time 
-  // console.log('功能二测试1. 多次添加拦截器，是否可以依次执行，累计对参数的操作 config =======> 预期： 3time  2time  1time ', res.config.headers)
+  console.log('功能二测试1. 多次添加拦截器，是否可以依次执行，累计对参数的操作 config =======> 预期： 3time  2time  1time ', res.config.headers)
   // res.data 预期：res.data.test = 123
-  // console.log('功能二测试1. 多次添加拦截器，是否可以依次执行，累计对参数的操作 response =======> 预期：res.data.test = 123', res.data)
+  console.log('功能二测试1. 多次添加拦截器，是否可以依次执行，累计对参数的操作 response =======> 预期：res.data.test = 123', res.data)
   return res
 }
 

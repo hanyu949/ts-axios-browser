@@ -8,7 +8,18 @@ const defaults: AxiosDefaultConfig = {
       Accept: 'application/json, text/plain, */*',
       test: 'default.test value'
     }
-  }
+  },
+  transformRequest: [
+    function(data: any, headers: any): any {
+      return data
+    }
+  ],
+
+  transformResponse: [
+    function(data: any): any {
+      return data
+    }
+  ]
 }
 
 const methodsNoData = ['delete', 'get', 'head', 'options']

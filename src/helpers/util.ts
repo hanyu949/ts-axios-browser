@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from '../types'
+import { AxiosRequestConfig, TransformFn } from '../types'
 
 const toString = Object.prototype.toString
 
@@ -69,4 +69,16 @@ function deepMerge(...objs: any[]) {
     }
   })
   return result
+}
+
+// 执行transformRequest transformResponse
+export function transform(data: any, headers: any, fns?: TransformFn | TransformFn[]) {
+  if (!fns) return data
+  if (!Array.isArray(fns)) {
+    fns = [fns]
+  }
+  fns.forEach(fn => {
+    data = fn(data, headers)
+  })
+  return data
 }

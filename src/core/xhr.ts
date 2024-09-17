@@ -2,6 +2,7 @@ import { transformResponse } from '../helpers/data'
 import { parseHeaders } from '../helpers/headers'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 import { createAxiosError } from '../helpers/error'
+import { transform } from '../helpers/util'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -31,6 +32,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         config,
         request
       }
+      response.data = transform(response.data, response.headers, config.transformResponse)
       handleResponse(response)
     }
 
