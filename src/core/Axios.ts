@@ -1,5 +1,6 @@
 import { AxiosError } from '../helpers/error'
 import InterceptorManager from '../helpers/interceptor'
+import { extendsTo } from '../helpers/util'
 import {
   AxiosDefaultConfig,
   AxiosInstance,
@@ -32,36 +33,9 @@ export class Axios {
     }
   }
 
-  private margeConfigs(
-    defaults: AxiosDefaultConfig,
-    configs: AxiosRequestConfig
-  ): AxiosRequestConfig {
-    let margedConfig: AxiosRequestConfig = Object.create({ headers: {} })
-    let { headers: defualtsHeaders = {} } = defaults
-    let { headers: configHeaders = {}, method = 'get' } = configs
-
-    // 1. 将config中的属性覆盖到margedConfig (key !== 'headers')
-    // 因为对于 url、params、data 这些属性，默认配置显然是没有意义的，它们是和每个请求强相关的，所以我们只从自定义配置中获取。
-    Object.keys(configs).forEach(key => {
-      if (key === 'headers') return
-      margedConfig[key] = defaults[key]
-      margedConfig[key] = configs[key]
-    })
-    // 2. 把defualtsHeaders部分，按照common和method的区分 填入margedConfig
-    Object.keys(defualtsHeaders).forEach(key => {
-      if (key === 'common') {
-        const commonObj = defualtsHeaders[key] ?? {}
-        Object.keys(commonObj).forEach(key => {
-          margedConfig.headers![key] = commonObj[key]
-        })
-      } else if (key === method) {
-        margedConfig.headers = Object.assign({}, margedConfig.headers, defualtsHeaders[key])
-      }
-    })
-    // 3. 把requestConfig中 自定义的headers，和margedConfig.headers合并
-    margedConfig.headers = Object.assign({}, margedConfig.headers, configHeaders)
-
-    return margedConfig
+  create(config: AxiosRequestConfig) {
+    let newAxios = createInstance(Object.assign({}, this.defaults, config))
+    return newAxios
   }
 
   request<T = any>(
@@ -140,4 +114,48 @@ export class Axios {
   ): AxiosPromise {
     return this.request(Object.assign(config || {}, { method }, { url }))
   }
+
+  private margeConfigs(
+    defaults: AxiosDefaultConfig,
+    configs: AxiosRequestConfig
+  ): AxiosRequestConfig {
+    let margedConfig: AxiosRequestConfig = Object.create({ headers: {} })
+    let { headers: defualtsHeaders = {} } = defaults
+    let { headers: configHeaders = {}, method = 'get' } = configs
+    // 1. 将config中的属性覆盖到margedConfig (key !== 'headers')
+    // 因为对于 url、params、data 这些属性，默认配置显然是没有意义的，它们是和每个请求强相关的，所以我们只从自定义配置中获取。
+    Object.keys(configs).forEach(key => {
+      if (key === 'headers') return
+      margedConfig[key] = defaults[key]
+      margedConfig[key] = configs[key]
+    })
+    margedConfig.transformRequest = configs.transformRequest
+      ? configs.transformRequest
+      : defaults.transformRequest
+    margedConfig.transformResponse = configs.transformResponse
+      ? configs.transformResponse
+      : defaults.transformResponse
+    // 2. 把defualtsHeaders部分，按照common和method的区分 填入margedConfig
+    Object.keys(defualtsHeaders).forEach(key => {
+      if (key === 'common') {
+        const commonObj = defualtsHeaders[key] ?? {}
+        Object.keys(commonObj).forEach(key => {
+          margedConfig.headers![key] = commonObj[key]
+        })
+      } else if (key === method) {
+        margedConfig.headers = Object.assign({}, margedConfig.headers, defualtsHeaders[key])
+      }
+    })
+    // 3. 把requestConfig中 自定义的headers，和margedConfig.headers合并
+    margedConfig.headers = Object.assign({}, margedConfig.headers, configHeaders)
+    return margedConfig
+  }
+}
+function createInstance(config: AxiosRequestConfig): AxiosInstance['request'] {
+  const context = new Axios(config)
+  const instance = Axios.prototype.request.bind(context)
+
+  extendsTo(instance, context)
+
+  return instance as AxiosInstance['request']
 }

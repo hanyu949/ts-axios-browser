@@ -1,5 +1,5 @@
 import qs from 'qs'
-import axios, { transformFn } from '../../src/index'
+import axios, { TransformFn } from '../../src/index'
 
 /**
  * 在发送每个请求，用户传递的配置可以和默认配置做一层合并。
@@ -58,7 +58,7 @@ function test1() {
     console.log(`测试3 默认配置Content-Type: application/x-www-form-urlencoded 是否生效 如果生效后面返回{a: '1'}`, res.data)
   })
 }
-test1()
+// test1()
 
 /**
  * 功能2 请求和响应配置化
@@ -88,4 +88,41 @@ function test2 () {
     console.log("功能2 请求和响应配置化 预期config: res.data = {..., a: 1}   结果：", res.data)
   })
 }
-test2() 
+// /test2() 
+
+/**
+ * 功能3 扩展 axios.create 静态接口
+ * 创建一个新的Axios实例，允许我们传入新的配置和默认配置合并，并做为新的默认配置。
+ */
+async function test3() {
+  // 新的配置和默认配置合并，并做为新的默认配置。
+  const instance = axios.create({
+    transformRequest: [(function(data) {
+      return qs.stringify(data)
+    })],
+    transformResponse: [function(data) {
+      if (typeof data === 'object') {
+        data.b = 2
+      }
+      return data
+    }]
+  })
+  
+  let newIns = await instance({
+    url: '/config/post',
+    method: 'post',
+    data: {
+      a: 1
+    }
+  })
+  let oldDog = await axios({
+    url: '/config/post',
+    method: 'post',
+    data: qs.stringify({
+      a: 1
+    })
+  })
+  console.log("老的axios默认配置不改变返回 预期应该是{a:1}  结果：", oldDog.data)
+  console.log("新的axios默认配置改变返回数据 预期应该是{a:1, b:2}  结果：", newIns.data)
+}
+test3()

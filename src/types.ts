@@ -7,6 +7,7 @@ export interface AxiosInstance {
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+  create(config?: AxiosRequestConfig): AxiosInstance
 }
 
 export interface AxiosInterceptorManager<T> {
@@ -56,6 +57,8 @@ export interface AxiosDefaultConfig {
   headers?: DefaultHeaders
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  transformRequest?: TransformFn | TransformFn[]
+  transformResponse?: TransformFn | TransformFn[]
   [propName: string]: any
 }
 interface DefaultHeaders {
