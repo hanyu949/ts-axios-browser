@@ -1,3 +1,5 @@
+import Cancel, { isCancel } from '../cancel/Cancel'
+import CancelToken from '../cancel/CancelToken'
 import { AxiosError } from '../helpers/error'
 import InterceptorManager from '../helpers/interceptor'
 import { extendsTo } from '../helpers/util'
@@ -22,6 +24,9 @@ interface PromiseChain {
   rejected?: RejectedFn
 }
 export class Axios {
+  CancelToken = CancelToken
+  Cancel = Cancel
+  isCancel = isCancel
   interceptors: Interceptors
   defaults: AxiosDefaultConfig
 

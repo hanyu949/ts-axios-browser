@@ -6,6 +6,7 @@ import { AxiosPromise, AxiosRequestConfig } from '../types'
 import xhr from './xhr'
 
 function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  throwIfCancellationRequested(config)
   processConfig(config)
   return xhr(config)
 }
@@ -28,6 +29,10 @@ function transformRequestData(config: AxiosRequestConfig): void {
 
 function transformHeaders(config: AxiosRequestConfig) {
   config.headers = buildHeaders(config)
+}
+
+function throwIfCancellationRequested(config: AxiosRequestConfig): void {
+  if (config.cancelToken) config.cancelToken.throwIfRequested()
 }
 
 export default dispatchRequest

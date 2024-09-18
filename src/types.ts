@@ -8,7 +8,18 @@ export interface AxiosInstance {
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   create(config?: AxiosRequestConfig): AxiosInstance
+  CancelToken: CancelTokenStatic
+  Cancel: CancelStatic
+  isCancel: (value: any) => boolean
 }
+export interface AxiosStatic extends AxiosInstance {
+  create(config?: AxiosRequestConfig): AxiosInstance
+
+  CancelToken: CancelTokenStatic
+  Cancel: CancelStatic
+  isCancel: (value: any) => boolean
+}
+
 
 export interface AxiosInterceptorManager<T> {
   use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
@@ -110,8 +121,10 @@ export type Method =
 export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
 export interface CancelToken {
-  promise: Promise<string>
-  reason?: string
+  promise: Promise<Cancel>
+  reason?: Cancel
+
+  throwIfRequested(): void
 }
 
 export interface Canceler {
@@ -131,4 +144,12 @@ export interface CancelTokenStatic {
 export interface CancelTokenSource {
   token: CancelToken
   cancel: Canceler
+}
+
+export interface Cancel {
+  message?: string
+}
+
+export interface CancelStatic {
+  new(message?: string): Cancel
 }
