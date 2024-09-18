@@ -6,7 +6,7 @@ import { transform } from '../helpers/util'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { data, url = '', method = 'get', headers, responseType, timeout } = config
+    const { data, url = '', method = 'get', headers, responseType, timeout, cancelToken } = config
 
     const request = new XMLHttpRequest()
 
@@ -42,7 +42,25 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       })
     }
 
+    processCancel()
+
     data !== null ? request.send(data) : request.send()
+
+    function processCancel(): void {
+      if (cancelToken) {
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(
+            /* istanbul ignore next */
+            () => {
+              // do nothing
+            }
+          )
+      }
+    }
 
     function handleResponse(response: AxiosResponse): void {
       if (response.status >= 200 && response.status < 300) resolve(response)

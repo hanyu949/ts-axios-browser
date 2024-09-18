@@ -46,6 +46,8 @@ export interface AxiosRequestConfig {
   timeout?: number
   transformRequest?: TransformFn | TransformFn[]
   transformResponse?: TransformFn | TransformFn[]
+  cancelToken?: CancelToken
+
   [propName: string]: any
 }
 export interface TransformFn {
@@ -106,3 +108,27 @@ export type Method =
   | 'PATCH'
 
 export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
+
+export interface CancelToken {
+  promise: Promise<string>
+  reason?: string
+}
+
+export interface Canceler {
+  (message?: string): void
+}
+
+export interface CancelExecutor {
+  (cancel: Canceler): void
+}
+
+export interface CancelTokenStatic {
+  new (executor: CancelExecutor): CancelToken
+
+  source(): CancelTokenSource
+}
+
+export interface CancelTokenSource {
+  token: CancelToken
+  cancel: Canceler
+}

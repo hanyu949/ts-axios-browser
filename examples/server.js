@@ -105,6 +105,13 @@ router.get('/config/get', (req, res) => {
   res.json(req.query)
 })
 
+// cancel
+router.get('/cancel/get', (req, res) => {
+  setTimeout(() => {
+    res.json(req.query)
+  }, 1000)
+})
+
 app.use(router)
 
 const port = process.env.PORT || 8081
