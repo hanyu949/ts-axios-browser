@@ -85,6 +85,7 @@
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
+    "@types/cookie-parser": "^1.4.7",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.11.0",
     "@types/qs": "^6.9.15",
@@ -126,5 +127,8 @@
     "webpack": "^4.28.4",
     "webpack-dev-middleware": "^3.5.0",
     "webpack-hot-middleware": "^2.24.3"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6"
   }
 }

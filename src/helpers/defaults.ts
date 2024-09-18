@@ -5,8 +5,7 @@ const defaults: AxiosDefaultConfig = {
   timeout: 0,
   headers: {
     common: {
-      Accept: 'application/json, text/plain, */*',
-      test: 'default.test value'
+      Accept: 'application/json, text/plain, */*'
     }
   },
   transformRequest: [

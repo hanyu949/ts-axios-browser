@@ -1,4 +1,3 @@
-import { head } from 'shelljs'
 import { AxiosRequestConfig } from '../types'
 import { isPlainObject } from './util'
 

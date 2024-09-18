@@ -6,7 +6,16 @@ import { transform } from '../helpers/util'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { data, url = '', method = 'get', headers, responseType, timeout, cancelToken } = config
+    const {
+      data,
+      url = '',
+      method = 'get',
+      headers,
+      responseType,
+      timeout,
+      cancelToken,
+      withCredentials
+    } = config
 
     const request = new XMLHttpRequest()
 
@@ -43,6 +52,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     processCancel()
+
+    if (withCredentials) request.withCredentials = true
 
     data !== null ? request.send(data) : request.send()
 

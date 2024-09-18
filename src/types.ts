@@ -20,7 +20,6 @@ export interface AxiosStatic extends AxiosInstance {
   isCancel: (value: any) => boolean
 }
 
-
 export interface AxiosInterceptorManager<T> {
   use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
 
@@ -58,6 +57,7 @@ export interface AxiosRequestConfig {
   transformRequest?: TransformFn | TransformFn[]
   transformResponse?: TransformFn | TransformFn[]
   cancelToken?: CancelToken
+  withCredentials?: boolean
 
   [propName: string]: any
 }
@@ -151,5 +151,5 @@ export interface Cancel {
 }
 
 export interface CancelStatic {
-  new(message?: string): Cancel
+  new (message?: string): Cancel
 }

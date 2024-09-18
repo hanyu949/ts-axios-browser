@@ -112,6 +112,16 @@ router.get('/cancel/get', (req, res) => {
   }, 1000)
 })
 
+// more
+router.get('/more/get', (req, res) => {
+  res.cookie('server1', 'test', { sameSite: 'none', secure: true })
+  res.json(
+    {
+      msg: '/more/get response'
+    }
+  )
+})
+
 app.use(router)
 
 const port = process.env.PORT || 8081
