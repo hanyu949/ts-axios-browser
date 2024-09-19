@@ -18,7 +18,9 @@ const defaults: AxiosDefaultConfig = {
     function(data: any): any {
       return data
     }
-  ]
+  ],
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN'
 }
 
 const methodsNoData = ['delete', 'get', 'head', 'options']
