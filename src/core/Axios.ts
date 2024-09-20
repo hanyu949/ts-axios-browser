@@ -156,11 +156,9 @@ export class Axios {
     return margedConfig
   }
 }
-function createInstance(config: AxiosRequestConfig): AxiosInstance['request'] {
+function createInstance(config: AxiosRequestConfig) {
   const context = new Axios(config)
-  const instance = Axios.prototype.request.bind(context)
-
-  extendsTo(instance, context)
-
-  return instance as AxiosInstance['request']
+  let instance = Axios.prototype.request.bind(context)
+  instance = extendsTo(instance, context)
+  return instance
 }

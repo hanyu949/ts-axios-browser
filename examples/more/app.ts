@@ -11,13 +11,37 @@ import axios from '../../src/index'
  * 
  * node examples\server2.js (开启8088的本地服务器)
  */
+function CORS() {
+  axios.get('/more/get').then(res => {
+    console.log(res.data)
+  })
+  
+  axios.post('http://127.0.0.1:8088/more/server2', {}, {
+    withCredentials: true
+  }).then(res => {
+    console.log(res)
+  })
+}
+// CORS()
 
-axios.get('/more/get').then(res => {
-  console.log(res.data)
-})
+/**
+ * CSRF 防御
+ * CSRF攻击主要是浏览器Cookie自动带入的机制导致在钓鱼网站的假请求带上了用户浏览器内的真cookie
+ * 如果能在请求的时候带入一个前后端都认同的token，这样浏览器自动带cookie的行为就不会影响服务端的鉴权
+ * 
+ * 功能：在请求的时候{
+ *     xsrfCookieName: 'XSRF-TOKEN-D',
+ *     xsrfHeaderName: 'X-XSRF-TOKEN-D'
+ *   }
+ */
+function CSRF() {
+  const instance = axios.create({
+    xsrfCookieName: 'XSRF-TOKEN-D',
+    xsrfHeaderName: 'X-XSRF-TOKEN-D'
+  })
 
-axios.post('http://127.0.0.1:8088/more/server2', {}, {
-  withCredentials: true
-}).then(res => {
-  console.log(res)
-})
+  instance.get('/more/get').then(res => {
+    console.log(res)
+  })
+}
+CSRF()

@@ -115,6 +115,7 @@ router.get('/cancel/get', (req, res) => {
 // more
 router.get('/more/get', (req, res) => {
   res.cookie('server1', 'test', { sameSite: 'none', secure: true })
+  res.cookie('XSRF-TOKEN-D', '1234abc')
   res.json(
     {
       msg: '/more/get response'

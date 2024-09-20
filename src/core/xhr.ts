@@ -3,6 +3,8 @@ import { parseHeaders } from '../helpers/headers'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 import { createAxiosError } from '../helpers/error'
 import { transform } from '../helpers/util'
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -10,13 +12,15 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       data,
       url = '',
       method = 'get',
-      headers,
+      headers = {},
       responseType,
       timeout,
       cancelToken,
-      withCredentials
+      withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName
     } = config
-
+    console.log(config)
     const request = new XMLHttpRequest()
 
     request.open(method.toUpperCase(), url, true)
@@ -44,7 +48,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       response.data = transform(response.data, response.headers, config.transformResponse)
       handleResponse(response)
     }
-
+    console.log('CORF', isURLSameOrigin(url), xsrfCookieName)
+    if ((withCredentials || isURLSameOrigin(url)) && xsrfCookieName) {
+      const xsrfValue = cookie.read(xsrfCookieName)
+      console.log(xsrfValue, xsrfCookieName)
+      if (xsrfValue) {
+        headers[xsrfHeaderName!] = xsrfValue
+      }
+    }
     if (headers && data !== null) {
       Object.keys(headers).forEach(name => {
         request.setRequestHeader(name, headers[name])
