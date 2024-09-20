@@ -55,7 +55,6 @@ export class Axios {
     } else {
       config = param1
     }
-
     if (typeof config === 'string') throw new AxiosError('methods unkonw', { url: config })
     config = this.margeConfigs(this.defaults, config) // defualt > config
 
@@ -120,6 +119,7 @@ export class Axios {
     return this.request(Object.assign(config || {}, { method }, { url }))
   }
 
+  // Q 需要优化
   private margeConfigs(
     defaults: AxiosDefaultConfig,
     configs: AxiosRequestConfig
@@ -140,6 +140,12 @@ export class Axios {
     margedConfig.transformResponse = configs.transformResponse
       ? configs.transformResponse
       : defaults.transformResponse
+    margedConfig.xsrfCookieName = configs.xsrfCookieName
+      ? configs.xsrfCookieName
+      : defaults.xsrfCookieName
+    margedConfig.xsrfHeaderName = configs.xsrfCookieName
+      ? configs.xsrfCookieName
+      : defaults.xsrfCookieName
     // 2. 把defualtsHeaders部分，按照common和method的区分 填入margedConfig
     Object.keys(defualtsHeaders).forEach(key => {
       if (key === 'common') {

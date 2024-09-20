@@ -41,7 +41,7 @@ function CSRF() {
   })
 
   instance.get('/more/get').then(res => {
-    console.log(res)
+    console.log(res.data)
   })
 }
 CSRF()

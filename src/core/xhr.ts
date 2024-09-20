@@ -20,7 +20,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       xsrfCookieName,
       xsrfHeaderName
     } = config
-    console.log(config)
     const request = new XMLHttpRequest()
 
     request.open(method.toUpperCase(), url, true)
@@ -48,7 +47,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       response.data = transform(response.data, response.headers, config.transformResponse)
       handleResponse(response)
     }
-    console.log('CORF', isURLSameOrigin(url), xsrfCookieName)
+    console.log('CSRF', isURLSameOrigin(url), xsrfCookieName)
     if ((withCredentials || isURLSameOrigin(url)) && xsrfCookieName) {
       const xsrfValue = cookie.read(xsrfCookieName)
       console.log(xsrfValue, xsrfCookieName)
