@@ -88,7 +88,7 @@ function test2 () {
     console.log("功能2 请求和响应配置化 预期config: res.data = {..., a: 1}   结果：", res.data)
   })
 }
-// /test2() 
+// test2()
 
 /**
  * 功能3 扩展 axios.create 静态接口
@@ -107,7 +107,6 @@ async function test3() {
       return data
     }]
   })
-  
   let newIns = await instance({
     url: '/config/post',
     method: 'post',
@@ -125,4 +124,4 @@ async function test3() {
   console.log("老的axios默认配置不改变返回 预期应该是{a:1}  结果：", oldDog.data)
   console.log("新的axios默认配置改变返回数据 预期应该是{a:1, b:2}  结果：", newIns.data)
 }
-test3()
+// test3()

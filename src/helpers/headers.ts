@@ -6,11 +6,10 @@ export function buildHeaders(config: AxiosRequestConfig): any {
   normalizeHeaderName(headers, 'Content-Type')
 
   if (isPlainObject(data)) {
-    if (headers && !headers['Content-Type']) {
+    if (headers) {
       headers['Content-Type'] = 'application/json;charset=utf-8'
     }
   }
-
   return headers
 }
 

@@ -140,6 +140,9 @@ function test2() {
         data: {
             a: 1,
             b: 2
+        },
+        headers: {
+            test2: 'function2&3 test'
         }
     }).then(res => {
         console.log("功能2&3测试 2. 如果传入普通对象,则需要将对象转化为JSON字符串 预期返回：{a:1,b:2},  实际返回：", res.data)

@@ -2,7 +2,7 @@ import Cancel, { isCancel } from '../cancel/Cancel'
 import CancelToken from '../cancel/CancelToken'
 import { AxiosError } from '../helpers/error'
 import InterceptorManager from '../helpers/interceptor'
-import { extendsTo } from '../helpers/util'
+import { extendsTo, isPlainObject } from '../helpers/util'
 import {
   AxiosDefaultConfig,
   AxiosInstance,
@@ -119,7 +119,6 @@ export class Axios {
     return this.request(Object.assign(config || {}, { method }, { url }))
   }
 
-  // Q 需要优化
   private margeConfigs(
     defaults: AxiosDefaultConfig,
     configs: AxiosRequestConfig
@@ -129,23 +128,32 @@ export class Axios {
     let { headers: configHeaders = {}, method = 'get' } = configs
     // 1. 将config中的属性覆盖到margedConfig (key !== 'headers')
     // 因为对于 url、params、data 这些属性，默认配置显然是没有意义的，它们是和每个请求强相关的，所以我们只从自定义配置中获取。
+    // margedConfig = Object.assign({}, defaults)
+    for (const key in defaults) {
+      if (Object.prototype.hasOwnProperty.call(defaults, key)) {
+        const element = defaults[key]
+        if (!isPlainObject(element)) margedConfig[key] = defaults[key]
+      }
+    }
     Object.keys(configs).forEach(key => {
       if (key === 'headers') return
       margedConfig[key] = defaults[key]
       margedConfig[key] = configs[key]
     })
-    margedConfig.transformRequest = configs.transformRequest
-      ? configs.transformRequest
-      : defaults.transformRequest
-    margedConfig.transformResponse = configs.transformResponse
-      ? configs.transformResponse
-      : defaults.transformResponse
-    margedConfig.xsrfCookieName = configs.xsrfCookieName
-      ? configs.xsrfCookieName
-      : defaults.xsrfCookieName
-    margedConfig.xsrfHeaderName = configs.xsrfCookieName
-      ? configs.xsrfCookieName
-      : defaults.xsrfCookieName
+    // Q 需要优化 1. 默认配置   2. xsrf配置
+    // margedConfig.transformRequest = configs.transformRequest
+    //   ? configs.transformRequest
+    //   : defaults.transformRequest
+    // margedConfig.transformResponse = configs.transformResponse
+    //   ? configs.transformResponse
+    //   : defaults.transformResponse
+    // margedConfig.xsrfCookieName = configs.xsrfCookieName
+    //   ? configs.xsrfCookieName
+    //   : defaults.xsrfCookieName
+    // margedConfig.xsrfHeaderName = configs.xsrfCookieName
+    //   ? configs.xsrfCookieName
+    //   : defaults.xsrfCookieName
+
     // 2. 把defualtsHeaders部分，按照common和method的区分 填入margedConfig
     Object.keys(defualtsHeaders).forEach(key => {
       if (key === 'common') {

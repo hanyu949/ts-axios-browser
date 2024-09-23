@@ -4,6 +4,7 @@ import { isPlainObject } from './util'
 export function buildData(config: AxiosRequestConfig) {
   if (!config?.data) return
   let { data } = config
+
   if (isPlainObject(data)) {
     config.data = JSON.stringify(data)
   }

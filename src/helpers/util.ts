@@ -82,3 +82,8 @@ export function transform(data: any, headers: any, fns?: TransformFn | Transform
   })
   return data
 }
+
+// 判断 FormData
+export function isFormData(val: any): boolean {
+  return typeof val !== 'undefined' && val instanceof FormData
+}
