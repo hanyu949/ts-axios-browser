@@ -54,6 +54,17 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.css?$/,
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+              transpileOnly: true
+            }
+          }
+        ]
       }
     ]
   },

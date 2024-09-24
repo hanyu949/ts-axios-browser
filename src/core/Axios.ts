@@ -38,7 +38,7 @@ export class Axios {
     }
   }
 
-  create(config: AxiosRequestConfig) {
+  create(config?: AxiosRequestConfig) {
     let newAxios = createInstance(Object.assign({}, this.defaults, config))
     return newAxios
   }

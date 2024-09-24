@@ -1,11 +1,14 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const path = require('path')
 const webpack = require('webpack')
 //https://segmentfault.com/a/1190000022096603 webpack-dev-middleware 源码解读
 const webpackDevMiddleware = require('webpack-dev-middleware')
 //web负责热更新的模块
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
+
+const multipart = require('connect-multiparty')
 
 const app = express()
 const compiler = webpack(WebpackConfig)
@@ -25,6 +28,10 @@ app.use(express.static(__dirname))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(multipart({
+  uploadDir: path.resolve(__dirname, 'upload-file')
+}))
 
 const router = express.Router()
 
@@ -122,6 +129,11 @@ router.get('/more/get', (req, res) => {
     }
   )
 })
+
+router.post('/more/upload', function(req, res) {
+  res.end('upload success!')
+})
+
 
 app.use(router)
 
