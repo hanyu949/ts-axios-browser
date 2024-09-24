@@ -1,4 +1,3 @@
-import { isPlainObject } from '../helpers/util'
 import { AxiosRequestConfig } from '../types'
 /**
  * config1 = {

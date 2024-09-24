@@ -87,3 +87,7 @@ export function transform(data: any, headers: any, fns?: TransformFn | Transform
 export function isFormData(val: any): boolean {
   return typeof val !== 'undefined' && val instanceof FormData
 }
+// 判断 URLSearchParams
+export function isURLSearchParams(val: any): val is URLSearchParams {
+  return typeof val !== 'undefined' && val instanceof URLSearchParams
+}

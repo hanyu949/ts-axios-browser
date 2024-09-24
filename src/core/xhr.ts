@@ -19,6 +19,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       withCredentials,
       xsrfCookieName,
       xsrfHeaderName,
+      auth,
+      validateStatus,
       onDownloadProgress,
       onUploadProgress
     } = config
@@ -38,7 +40,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     request.send(data)
 
     function handleResponse(response: AxiosResponse): void {
-      if (response.status >= 200 && response.status < 300) resolve(response)
+      if (!validateStatus || validateStatus(response.status)) resolve(response)
       else {
         reject(
           createAxiosError(
@@ -87,6 +89,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function processHeaders(): void {
       if (isFormData(data)) delete headers['Content-Type']
+
+      if (auth) headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
 
       if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
         const xsrfValue = cookie.read(xsrfCookieName)

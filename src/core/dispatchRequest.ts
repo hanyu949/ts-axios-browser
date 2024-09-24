@@ -1,6 +1,6 @@
 import { buildData } from '../helpers/data'
 import { buildHeaders } from '../helpers/headers'
-import { bulidURL } from '../helpers/url'
+import { bulidURL, combineURL, isAbsoluteURL } from '../helpers/url'
 import { flattenHeaders, transform } from '../helpers/util'
 import { AxiosPromise, AxiosRequestConfig } from '../types'
 import xhr from './xhr'
@@ -20,6 +20,10 @@ function processConfig(config: AxiosRequestConfig): void {
 }
 
 function transformUrl(config: AxiosRequestConfig): void {
+  let { url, baseURL } = config
+  if (baseURL && !isAbsoluteURL(url!)) {
+    url = combineURL(baseURL, url)
+  }
   bulidURL(config)
 }
 
