@@ -50,7 +50,7 @@ export function flattenHeaders(
 }
 
 // 合并传进来的对象
-function deepMerge(...objs: any[]) {
+export function deepMerge(...objs: any[]) {
   const result = Object.create(null)
   objs.forEach(obj => {
     if (obj) {
