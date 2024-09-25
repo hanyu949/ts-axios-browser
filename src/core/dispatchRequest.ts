@@ -1,7 +1,7 @@
 import { buildData } from '../helpers/data'
-import { buildHeaders } from '../helpers/headers'
+import { buildHeaders, flattenHeaders } from '../helpers/headers'
 import { bulidURL, combineURL, isAbsoluteURL } from '../helpers/url'
-import { flattenHeaders, transform } from '../helpers/util'
+import { transform } from '../helpers/util'
 import { AxiosPromise, AxiosRequestConfig } from '../types'
 import xhr from './xhr'
 

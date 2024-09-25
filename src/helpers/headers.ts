@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from '../types'
-import { isPlainObject } from './util'
+import { deepMerge, isPlainObject } from './util'
 
 export function buildHeaders(config: AxiosRequestConfig): any {
   const { headers = {}, data } = config
@@ -24,6 +24,7 @@ function normalizeHeaderName(headers: Record<string, string>, normalizedName: st
     }
   })
 }
+
 /**
  * "connection: keep-alive
  *  content-length: 13
@@ -44,4 +45,27 @@ export function parseHeaders(headers: string): Record<string, string> {
     ParsedHeaders[key] = val
   })
   return ParsedHeaders
+}
+
+/**
+ * 根据不同的method拍平headers
+ * @param headers axios.request.config.headers
+ * @param method axios.request.config.method
+ * @returns axios.request.config.headers
+ */
+export function flattenHeaders(
+  headers: AxiosRequestConfig['headers'],
+  method: AxiosRequestConfig['method']
+): AxiosRequestConfig['headers'] {
+  if (!headers || !method) {
+    return headers
+  }
+  // const methodsWithData: AxiosRequestConfig['method'][] = ['post', 'put', 'patch']
+  // const methodsNoData: AxiosRequestConfig['method'][] = ['delete', 'get', 'head', 'options']
+  headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
+  const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
+  methodsToDelete.forEach(method => {
+    delete headers![method]
+  })
+  return headers
 }

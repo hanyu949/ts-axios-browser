@@ -24,31 +24,6 @@ export const extendsTo = <T, U>(to: T, from: U): T & U => {
   return to as T & U
 }
 
-// 根据不同的method拍平headers
-export function flattenHeaders(
-  headers: AxiosRequestConfig['headers'],
-  method: AxiosRequestConfig['method']
-): AxiosRequestConfig['headers'] {
-  if (!headers || !method) {
-    return headers
-  }
-  // Q: patch head options是什么http方法？
-  const methodsWithData: AxiosRequestConfig['method'][] = ['post', 'put', 'patch']
-  const methodsNoData: AxiosRequestConfig['method'][] = ['delete', 'get', 'head', 'options']
-  // axios.defaults.headers.common['test'] = 123
-  // axios.defaults.headers.post['Content-Type'] = 'json'
-  // if (methodsNoData.indexOf(method) > -1) {
-  // }
-  // if (methodsWithData.indexOf(method) > -1) {
-  // }
-  headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
-  const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
-  methodsToDelete.forEach(method => {
-    delete headers![method]
-  })
-  return headers
-}
-
 // 合并传进来的对象
 export function deepMerge(...objs: any[]) {
   const result = Object.create(null)
