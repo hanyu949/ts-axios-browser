@@ -95,7 +95,7 @@ describe('helpers:headers', () => {
     })
     test('should do nothing if headers is undefined or empty object', () => {
       expect(flattenHeaders(undefined, 'get')).toBeUndefined()
-      expect(flattenHeaders({}, 'post')).toEqual({})
+      expect(flattenHeaders({}, 'post')).toEqual({}) 
     })
   })
 })
