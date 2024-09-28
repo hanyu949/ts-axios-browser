@@ -4,8 +4,10 @@ import {
   isFormData,
   isURLSearchParams,
   extendsTo,
-  deepMerge
+  deepMerge,
+  transform
 } from '../../src/helpers/util'
+import { TransformFn } from '../../src/types'
 
 describe('helpers:util', () => {
   describe('isXX', () => {
@@ -112,6 +114,20 @@ describe('helpers:util', () => {
       expect(deepMerge(null, null)).toEqual({})
       expect(deepMerge(null, { foo: 123 })).toEqual({ foo: 123 })
       expect(deepMerge({ foo: 123 }, null)).toEqual({ foo: 123 })
+    })
+  })
+
+  describe('transform', () => {
+    test('should been called if fns is not Array', () => {
+      const fns: TransformFn = jest.fn((data, headers) => {})
+      transform({ foo: 'bar' }, {}, fns)
+      expect(fns).toHaveBeenCalled()
+    })
+    test('should OK if fns is Array', () => {
+      const fns: TransformFn = jest.fn((data, headers) => {})
+      transform({ foo: 'bar' }, {}, [fns, fns])
+      expect(fns).toHaveBeenCalled()
+      expect(fns).toHaveBeenCalledTimes(2)
     })
   })
 })
