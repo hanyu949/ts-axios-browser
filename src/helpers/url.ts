@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from '../types'
-import { isDate, isPlainObject } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 /**
  * 如果params有请求数据 将数据转换为字符串放入URL中
@@ -19,6 +19,7 @@ export function bulidURL(config: AxiosRequestConfig): void {
   if (!config?.params || !config?.url) return
   let { params, url } = config
   let paramsArray: string[] = []
+  let paramsIsURLSearchParams: string = isURLSearchParams(params) ? params.toString() : ''
 
   Object.keys(params).forEach(key => {
     let param = params[key]
@@ -33,15 +34,15 @@ export function bulidURL(config: AxiosRequestConfig): void {
     if (token) paramsArray.push(token)
   })
 
-  if (paramsArray.length === 0) return
+  if (paramsArray.length === 0 && !paramsIsURLSearchParams) return
   paramsArray = enCodeURL(paramsArray)
 
   config.url = url.indexOf('#') !== -1 ? url.slice(0, url.indexOf('#')) : url
 
   if (url.indexOf('?') !== -1) {
-    config.url += '&' + paramsArray.join('&')
+    config.url += '&' + paramsArray.join('&') + paramsIsURLSearchParams
   } else {
-    config.url += '?' + paramsArray.join('&')
+    config.url += '?' + paramsArray.join('&') + paramsIsURLSearchParams
   }
 
   // config.url = enCodeURL(config.url)
