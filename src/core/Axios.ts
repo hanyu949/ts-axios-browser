@@ -1,11 +1,11 @@
 import Cancel, { isCancel } from '../cancel/Cancel'
 import CancelToken from '../cancel/CancelToken'
 import { AxiosError } from '../helpers/error'
+import { buildHeaders } from '../helpers/headers'
 import InterceptorManager from '../helpers/interceptor'
 import { extendsTo, isPlainObject } from '../helpers/util'
 import {
   AxiosDefaultConfig,
-  AxiosInstance,
   AxiosPromise,
   AxiosRequestConfig,
   AxiosResponse,
@@ -14,7 +14,6 @@ import {
   ResolvedFn
 } from '../types'
 import dispatchRequest from './dispatchRequest'
-// import { mergeConfig } from './mergeConfig'
 interface Interceptors {
   request: InterceptorManager<AxiosRequestConfig>
   response: InterceptorManager<AxiosResponse>
@@ -55,7 +54,8 @@ export class Axios {
     } else {
       config = param1
     }
-    if (typeof config === 'string') throw new AxiosError('methods unkonw', { url: config })
+    if (typeof config === 'string') throw new AxiosError('methods unknow', { url: config })
+    config.headers = buildHeaders(config)
     config = this.margeConfigs(this.defaults, config) // defualt -> config
     if (config.method) config.method = config.method?.toLowerCase() as Method
 

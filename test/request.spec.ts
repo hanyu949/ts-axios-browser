@@ -1,6 +1,5 @@
 import { getAjaxRequest } from './helper'
 import axios, { AxiosResponse, AxiosError } from '../src/index'
-import { readSync } from 'fs'
 
 describe('requests', () => {
   beforeEach(() => {
