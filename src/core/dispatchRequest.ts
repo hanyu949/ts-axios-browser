@@ -13,7 +13,7 @@ function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
 
 function processConfig(config: AxiosRequestConfig): void {
   transformUrl(config)
-  transformHeaders(config)
+  // transformHeaders(config)
   config.data = transform(config.data, config.headers, config.transformRequest)
   transformRequestData(config)
   config.headers = flattenHeaders(config.headers, config.method!)
@@ -22,7 +22,7 @@ function processConfig(config: AxiosRequestConfig): void {
 function transformUrl(config: AxiosRequestConfig): void {
   let { url, baseURL } = config
   if (baseURL && !isAbsoluteURL(url!)) {
-    url = combineURL(baseURL, url)
+    config.url = combineURL(baseURL, url)
   }
   bulidURL(config)
 }

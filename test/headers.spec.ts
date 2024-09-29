@@ -27,7 +27,22 @@ describe('headers', () => {
             expect(request.requestHeaders['Content-Type']).toBe('application/json;charset=utf-8')
         })
     })
-    test('should remove content-type if data is empty', () => {})
-    test('should preserve content-type if data is false', () => {})
-    test('should remove content-type if data is formData', () => {})
+    test('should remove content-type if data is empty', () => {
+        axios.post('/foo')
+        return getAjaxRequest().then(request => {
+            expect(request.requestHeaders['Content-Type']).toBeUndefined()
+        })
+    })
+    test('should preserve content-type if data is false', () => {
+        axios.post('/foo', false)
+        return getAjaxRequest().then(request => {
+            expect(request.requestHeaders['Content-Type']).toBe('application/x-www-form-urlencoded')
+        })
+    })
+    test('should remove content-type if data is formData', () => {
+        axios.post('/foo', new FormData().append('foo', 'bar'))
+        return getAjaxRequest().then(request => {
+            expect(request.requestHeaders['Content-Type']).toBeUndefined()
+        })
+    })
 })

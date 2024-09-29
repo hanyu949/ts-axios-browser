@@ -8,6 +8,7 @@ import {
   AxiosDefaultConfig,
   AxiosPromise,
   AxiosRequestConfig,
+  AxiosRequestFunctionType,
   AxiosResponse,
   Method,
   RejectedFn,
@@ -157,7 +158,7 @@ export class Axios {
 }
 function createInstance(config: AxiosRequestConfig) {
   const context = new Axios(config)
-  let instance = Axios.prototype.request.bind(context)
-  instance = extendsTo(instance, context)
-  return instance
+  const instance = Axios.prototype.request.bind(context)
+  const axios: AxiosRequestFunctionType & Axios = extendsTo(instance, context)
+  return axios
 }
