@@ -1,5 +1,6 @@
 import { getAjaxRequest } from './helper'
 import axios, { AxiosResponse, AxiosError } from '../src/index'
+import { readSync } from 'fs'
 
 describe('requests', () => {
   beforeEach(() => {
@@ -22,7 +23,7 @@ describe('requests', () => {
       url: '/foo',
       method: 'POST'
     }).then(response => {
-      expect(response.config.method).toBe('POST')
+      expect(response.config.method).toBe('post')
       done()
     })
 
@@ -104,5 +105,140 @@ describe('requests', () => {
 
       done()
     }
+  })
+  test('should resolve when validateStatus returns ture', (done) => {
+    const resolveSpy = jest.fn((res: AxiosResponse) => res)
+    const rejecteSpy = jest.fn((err: AxiosError) => err)
+
+    axios('/foo', {
+      validateStatus: status => {
+        return status !== 500
+      }
+    })
+      .then(resolveSpy)
+      .then(next)
+      .catch(rejecteSpy)
+
+    getAjaxRequest().then(request => {
+      request.respondWith({
+        status: 200
+      })
+    })
+
+    function next(reason: AxiosResponse) {
+      expect(resolveSpy).toHaveBeenCalled()
+      expect(rejecteSpy).not.toHaveBeenCalled()
+      expect(reason.status).toBe(200)
+      expect(reason.config.url).toBe('/foo')
+
+      done()
+    }
+  })
+  test('should return JSON when resolved', (done) => {
+    let response: AxiosResponse
+    axios('/api/account/signup', {
+      validateStatus: status => {
+        return status !== 500
+      },
+      auth: {
+        username: '',
+        password: ''
+      },
+      method: 'post',
+      headers: {
+        Accept: 'application/json'
+      }
+    }).then(res => {
+      response = res
+    })
+    getAjaxRequest().then(request => {
+      request.respondWith({
+        status: 200,
+        statusText: 'OK',
+        responseText: '{"a": 1}',
+      })
+      setTimeout(() => {
+        expect(response.data).toEqual({ a: 1 })
+        done()
+      }, 200)
+    })
+  })
+  test('should return JSON when rejecting', (done) => {
+    let response: AxiosResponse
+
+    axios('/api/account/signup', {
+      auth: {
+        username: '',
+        password: ''
+      },
+      method: 'post',
+      headers: {
+        Accept: 'application/json'
+      }
+    }).catch(error => {
+      response = error.response
+    })
+
+    getAjaxRequest().then(request => {
+      request.respondWith({
+        status: 400,
+        statusText: 'Bad Request',
+        responseText: '{"error": "BAD USERNAME", "code": 1}'
+      })
+
+      setTimeout(() => {
+        expect(typeof response.data).toBe('object')
+        expect(response.data.error).toBe('BAD USERNAME')
+        expect(response.data.code).toBe(1)
+        done()
+      }, 100)
+    })
+  })
+  test('should supply correct response', (done) => {
+    let response: AxiosResponse
+
+    axios.post('/foo').then(res => {
+      response = res
+    })
+
+    getAjaxRequest().then(request => {
+      request.respondWith({
+        status: 200,
+        statusText: 'OK',
+        responseText: '{"foo": "bar"}',
+        responseHeaders: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      setTimeout(() => {
+        expect(response.data.foo).toBe('bar')
+        expect(response.status).toBe(200)
+        expect(response.statusText).toBe('OK')
+        expect(response.headers['Content-Type']).toBe('application/json')
+        done()
+      }, 100)
+    })
+  })
+
+  test('should allow overriding Content-Type header case-insensitive', () => {
+    let response: AxiosResponse
+    axios
+      .post(
+        '/foo',
+        { prop: 'value' },
+        {
+          headers: {
+            'content-type': 'application/json'
+          }
+        }
+      )
+      .then(res => {
+        response = res
+      })
+
+    return getAjaxRequest().then(request => {
+      expect(request.requestHeaders['Content-Type']).toBe('application/json')
+    })
   })
 })

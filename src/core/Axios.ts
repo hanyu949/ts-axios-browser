@@ -57,6 +57,7 @@ export class Axios {
     }
     if (typeof config === 'string') throw new AxiosError('methods unkonw', { url: config })
     config = this.margeConfigs(this.defaults, config) // defualt -> config
+    if (config.method) config.method = config.method?.toLowerCase() as Method
 
     let chain: PromiseChain[] = [
       {

@@ -6,7 +6,7 @@ export function buildHeaders(config: AxiosRequestConfig): any {
   normalizeHeaderName(headers, 'Content-Type')
 
   if (isPlainObject(data)) {
-    if (headers) {
+    if (headers && !headers['Content-Type']) {
       headers['Content-Type'] = 'application/json;charset=utf-8'
     }
   }
@@ -17,6 +17,7 @@ function normalizeHeaderName(headers: Record<string, string>, normalizedName: st
   if (!headers) {
     return
   }
+
   Object.keys(headers).forEach(name => {
     if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
       headers[normalizedName] = headers[name]
